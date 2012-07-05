@@ -1,13 +1,7 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
-from subprocess import check_output
-from collections import defaultdict
 from optparse import OptionParser
-
-
-
-
-
+from modules import xrandr, ui
 
 def opts():
     parser = OptionParser("usage: %prog [options] [args]")
@@ -18,14 +12,11 @@ def opts():
     return options, args
 
 
-
-
 def main():
-    spawn_screen()
+    #ui.spawn_screen()
     #options, args = opts()
-    #screens = get_screens()
-    #print(screens)
-
+    screens = xrandr.get_screens(preferred_only=False)
+    ui.make_option_menus(screens)
 
 if __name__=='__main__':
     main()
