@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import tkinter as tk
 from tkinter import Tk, RIGHT, BOTH, RAISED, Frame, Button, ttk
 from tkinter.ttk import Style
 
@@ -28,12 +29,7 @@ class xrUI(Frame):
         okButton = Button(self, text="OK")
         okButton.pack(side=RIGHT)
 
-
-def make_option_menus(screens):
-    window = tk.Tk()
-    window.geometry("300x200+300+300")
-    app = xrUI(window)
-
+def add_option_menus(screens, window):
     vars = []
     omenus = []
     for screen_name, modes  in screens.items():
@@ -43,7 +39,12 @@ def make_option_menus(screens):
                     zip(modes['resolutions'], modes['refresh_rates']) ]
         omenus.append(tk.OptionMenu(window, vars[-1],
                                     *options))
-                                    #command=print_it))
         omenus[-1].pack()
 
+def gen_ui(screens):
+    window = Tk()
+    window.geometry("300x200+300+300")
+    add_option_menus(screens, window)
+
+    app = xrUI(window)
     window.mainloop()
