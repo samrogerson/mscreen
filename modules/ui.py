@@ -16,7 +16,6 @@ def make_option_menus(screens):
 
     vars = []
     omenus = []
-    print(dir(screens))
     for screen_name, modes  in screens.items():
         vars.append(tk.StringVar())
         vars[-1].set(screen_name+"...")
