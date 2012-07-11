@@ -54,6 +54,8 @@ class XRUI(Tk):
 
 
     def add_option_menus(self, screens, frame):
+        multiple_screens_present = len(list(screens.keys()))
+
         omenus = []
 
         frame.rowconfigure(0, pad=3)
@@ -83,14 +85,17 @@ class XRUI(Tk):
         for r,(omenu,rb) in enumerate(zip(omenus,rbuttons)):
             omenu.config(width=max_len, anchor='w')
             omenu.grid(row=r, column=0)
-            rb.grid(row=r, column=1)
+            if multiple_screens_present:
+                rb.grid(row=r, column=1)
 
-        mirror_label = tk.Label(frame, text='Mirror output')
-        mirror_label.config(width=max_len, anchor='w')
-        mirror_label.grid(row=2, column=0)
-        mirror_rb = tk.Radiobutton(frame, variable=self.main_screen,
-                                   value=__MIRROR)
-        mirror_rb.grid(row=2, column=1)
+        if multiple_screens_present:
+            mirror_label = tk.Label(frame, text='Mirror output')
+            mirror_label.config(width=max_len, anchor='w')
+            mirror_label.grid(row=2, column=0)
+            mirror_rb = tk.Radiobutton(frame, variable=self.main_screen,
+                                       value=__MIRROR)
+            mirror_rb.grid(row=2, column=1)
+
         self.main_screen.set(__MIRROR)
 
 
