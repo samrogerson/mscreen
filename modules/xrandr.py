@@ -1,4 +1,4 @@
-from subprocess import check_output
+from subprocess import check_output, call
 from collections import defaultdict
 
 def get_screens(preferred_only = False):
@@ -32,3 +32,20 @@ def get_screens(preferred_only = False):
                     screens[current_screen_type]['resolutions'].append(res)
                     screens[current_screen_type]['refresh_rates'].append(ref)
     return screens
+
+def set_modes(screens, off='off'):
+    xr_args = get_command_list(screens,off)
+    if len(xr_args) > 1:
+        call(xr_args)
+
+
+def get_command_list(screens, off='off'):
+    out = ['xrandr']
+    for screen, mode in screens.items():
+        out.extend(['--output', screen])
+        if mode == off:
+            out.append('--off')
+        else:
+            out.extend(['--mode', mode])
+    return out
+

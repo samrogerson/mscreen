@@ -1,20 +1,8 @@
 #! /usr/bin/env python3
 
-from optparse import OptionParser
 from modules import xrandr, ui
 
-def opts():
-    parser = OptionParser("usage: %prog [options] [args]")
-    parser.add_option("-o", "--output", action="store", dest="one_screen"  ,
-                      default=None, metavar="SCREEN",
-                      help="Set output to one display")
-    options,args = parser.parse_args()
-    return options, args
-
-
 def main():
-    #ui.spawn_screen()
-    #options, args = opts()
     screens = xrandr.get_screens(preferred_only=False)
     ui.XRUI(screens)
 

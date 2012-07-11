@@ -4,6 +4,11 @@ import tkinter as tk
 from tkinter import Tk, RIGHT, LEFT, BOTH, RAISED, Frame, Button, ttk
 from tkinter.ttk import Style
 
+from modules.xrandr import set_modes
+
+
+_XRUI__OFF='Turn Off'
+
 class XRUI(Tk):
     def __init__(self, screens):
         Tk.__init__(self)
@@ -21,6 +26,7 @@ class XRUI(Tk):
     def initUI(self, screens):
         self.geometry("+300+300")
         self.title("mscreen")
+        self.vars = {}
 
         xr_ui = Frame(self)
         xr_ui.pack(fill=BOTH,expand=1)
@@ -32,24 +38,36 @@ class XRUI(Tk):
 
         self.mainloop()
 
-    def update_screens():
-        print(var.get())
+    def get_changed_screens(self):
+        changed = {}
+        for scr,var in self.vars.items():
+            if scr != var.get():
+                changed[scr] = self.str_to_res[scr].get(var.get(),__OFF)
+        return changed
+
+    def update_screens(self):
+        modes = self.get_changed_screens()
+        set_modes(modes, off=__OFF)
 
     def add_option_menus(self, screens, frame):
-        vars = []
         omenus = []
 
         frame.rowconfigure(0, pad=3)
         frame.rowconfigure(1, pad=3)
 
         max_len = 0
+        self.str_to_res = {}
         for screen_name, modes  in screens.items():
-            vars.append(tk.StringVar())
-            vars[-1].set(screen_name+"...")
+            self.vars[screen_name] = tk.StringVar()
+            self.vars[screen_name].set(screen_name)
             options = [ "{res} ({ref})".format(res=res,ref=ref) for res,ref in
                         zip(modes['resolutions'], modes['refresh_rates']) ]
+            self.str_to_res[screen_name] = dict(zip(options,
+                                                    modes['resolutions']))
+            options.append(__OFF)
             max_len = max(max_len, max( map(len, options)))
-            omenus.append(tk.OptionMenu(frame, vars[-1], *options))
+            omenus.append(tk.OptionMenu(frame, self.vars[screen_name],
+                                        *options))
 
         for r,omenu in enumerate(omenus):
             omenu.config(width=max_len, anchor='w')
